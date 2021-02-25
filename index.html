@@ -1,0 +1,53 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bowser@2.9.0/es5.js"></script>
+<script type="text/javascript" src="jquery.browser-fingerprint-1.1.js"></script>
+<script type="text/javascript" src="jquery.browser-fingerprint-1.1.min.js"></script>
+<script type="text/javascript" src="md5.js"></script>
+<script type="text/javascript" src="j.info.js"></script>
+<!-- <script type="text/javascript" src="useragent.js"></script> -->
+<script type="text/javascript" src="window.js"></script>
+<script type="text/javascript" src="webrtc.js"></script>
+
+<br>
+Your browser fingerprint (md5):
+
+<script>
+    document.write($.fingerprint());
+</script>
+
+<br>
+
+your IP:
+<script>
+  document.write(myIP());
+</script>
+
+<br>
+
+Your user-agent:
+<input type="text" id="UserAgent">
+<script>
+  document.getElementById('UserAgent').value = navigator.userAgent;
+</script>
+
+<br>
+
+Your screen resolution:
+<script>
+  document.write(w, ' x ', h);
+</script>
+
+<br>
+
+WebRTC check:
+<button onclick="webrtc()">Check</button>
+
+<br>
+
+Timezone:
+<script>
+  document.write(Intl.DateTimeFormat().resolvedOptions().timeZone)
+</script>
+
+<br>
