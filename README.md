@@ -1,7 +1,7 @@
 # InfoGathering
 Generates almost unique MD5 hash for each visitor based on PC information. Also has some other info gathering functions.
 This is an quite simple script for fingerprinting. 
-<img src="https://imgur.com/a/CMZCdkv">
+<img src="https://i.imgur.com/i3JKEnZ.png">
 
 # How does it work?
 It uses the following plugins to create MD5 hash.
