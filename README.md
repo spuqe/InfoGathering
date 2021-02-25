@@ -5,12 +5,12 @@ This is an quite simple script for fingerprinting.
 
 # How does it work?
 It uses the following plugins to create MD5 hash.
-the user agent
-screen size
-color depth
-the timezone offset
-sessionStorage support
-localStorage support
+* the user agent
+* screen size
+* color depth
+* the timezone offset
+* sessionStorage support
+* localStorage support
 
 # IP checker
 Just an simple function which sends request to an IP checker API and shows you the IP.
