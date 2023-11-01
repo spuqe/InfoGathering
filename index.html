@@ -8,11 +8,67 @@
 <script type="text/javascript" src="window.js"></script>
 <script type="text/javascript" src="webrtc.js"></script>
 
+<style>
+  /* Body styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Container for content */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+
+  /* Heading styles */
+  h1 {
+    color: #333;
+  }
+
+  /* Form styles */
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  /* Mouse position styles */
+  #cursorY,
+  #cursorX {
+    width: 60px;
+  }
+
+  /* Media query for responsiveness */
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  }
+</style>
+
 <br>
 Your browser fingerprint (md5):
 
 <script>
-    document.write($.fingerprint());
+  document.write($.fingerprint());
 </script>
 
 <br>
@@ -56,17 +112,165 @@ Timezone:
   window.onload = init;
   function init() {
     if (window.Event) {
-    document.captureEvents(Event.MOUSEMOVE);
+      document.captureEvents(Event.MOUSEMOVE);
     }
     document.onmousemove = getCursorXY;
   }
-  
+
   function getCursorXY(e) {
     document.getElementById('cursorX').value = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
     document.getElementById('cursorY').value = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
   }
-  </script>
-  
-  <body>
- 
+</script>
+
+<body>
+
   Mouse position y: <input type="text" id="cursorY" size="3"> x: <input type="text" id="cursorX" size="3">
+
+
+  <p>Connection Type: <span id="connectionType"></span></p>
+  <p>Effective Network Type: <span id="effectiveType"></span></p>
+  <p>Downlink Max Speed: <span id="downlinkMax"></span> Mbps</p>
+  <p>Save Data Mode: <span id="saveData"></span></p>
+
+  <script>
+    // Check if the browser supports the Network Information API
+    if ('connection' in navigator) {
+      const connection = navigator.connection;
+
+      // Display the connection type
+      document.getElementById('connectionType').textContent = connection.type;
+
+      // Display the effective network type
+      document.getElementById('effectiveType').textContent = connection.effectiveType;
+
+      // Display the downlink max speed
+      document.getElementById('downlinkMax').textContent = connection.downlinkMax + ' Mbps';
+
+      // Display whether save data mode is enabled
+      document.getElementById('saveData').textContent = connection.saveData ? 'Enabled' : 'Disabled';
+    } else {
+      document.getElementById('connectionType').textContent = 'Not supported';
+    }
+  </script>
+
+  <p>Battery Level: <span id="batteryLevel"></span>%</p>
+  <p>Charging: <span id="isCharging"></span></p>
+
+  <p>Cookies on this site:</p>
+  <ul id="cookieList"></ul>
+
+  <script>
+    // Battery Status
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then(function (battery) {
+        // Display battery level
+        document.getElementById('batteryLevel').textContent = (battery.level * 100).toFixed(2) + '%';
+
+        // Display charging status
+        document.getElementById('isCharging').textContent = battery.charging ? 'Yes' : 'No';
+      });
+    } else {
+      document.getElementById('batteryLevel').textContent = 'Not supported';
+    }
+
+    // Cookie Information
+    function listCookies() {
+      const cookies = document.cookie.split(';');
+      const cookieList = document.getElementById('cookieList');
+      cookieList.innerHTML = '';
+
+      cookies.forEach(function (cookie) {
+        const [name, value] = cookie.split('=');
+        const listItem = document.createElement('li');
+        listItem.textContent = name.trim() + ': ' + value;
+        cookieList.appendChild(listItem);
+      });
+    }
+
+    listCookies();
+  </script>
+
+  <p>Supported Video Codecs: <span id="supportedVideoCodecs"></span></p>
+  <p>Supported Audio Codecs: <span id="supportedAudioCodecs"></span></p>
+
+  <script>
+      // Media Capabilities
+      if ('mediaCapabilities' in navigator) {
+          navigator.mediaCapabilities.decodingInfo({type: 'media-source', video: {codec: 'vp9'}})
+              .then(info => {
+                  // Display supported video codecs
+                  document.getElementById('supportedVideoCodecs').textContent = info.supported ? info.supported.join(', ') : 'Not supported';
+              });
+
+          navigator.mediaCapabilities.decodingInfo({type: 'media-source', audio: {codec: 'opus'}})
+              .then(info => {
+                  // Display supported audio codecs
+                  document.getElementById('supportedAudioCodecs').textContent = info.supported ? info.supported.join(', ') : 'Not supported';
+              });
+      } else {
+          document.getElementById('supportedVideoCodecs').textContent = 'Not supported';
+          document.getElementById('supportedAudioCodecs').textContent = 'Not supported';
+      }
+  </script>
+
+  <p>Device Name: <span id="deviceName"></span></p>
+  <p>Device Model: <span id="deviceModel"></span></p>
+  <p>Operating System: <span id="os"></span></p>
+
+  <script>
+      // Device Information
+      document.getElementById('deviceName').textContent = navigator.deviceMemory || 'Not supported';
+      document.getElementById('deviceModel').textContent = navigator.hardwareConcurrency || 'Not supported';
+      document.getElementById('os').textContent = navigator.platform || 'Not supported';
+  </script>
+
+  <p>Fonts available on this system:</p>
+  <div id="fontList"></div>
+
+  <script>
+      // Available Fonts
+      const fonts = Array.from(document.fonts).map(font => font.family);
+      const fontList = document.getElementById('fontList');
+      fontList.textContent = fonts.join(', ');
+  </script>
+
+  <p>Preferred Language: <span id="preferredLanguage"></span></p>
+  <p>Locale: <span id="locale"></span></p>
+
+  <script>
+      // User Language and Locale
+      document.getElementById('preferredLanguage').textContent = navigator.language || 'Not available';
+      document.getElementById('locale').textContent = navigator.languages ? navigator.languages.join(', ') : 'Not available';
+  </script>
+
+  <p>Camera Access: <span id="cameraAccess"></span></p>
+  <p>Camera Constraints: <span id="cameraConstraints"></span></p>
+
+  <script>
+      // Camera Access
+      navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+              // Camera access granted
+              document.getElementById('cameraAccess').textContent = 'Granted';
+              document.getElementById('cameraConstraints').textContent = JSON.stringify(stream.getVideoTracks()[0].getSettings());
+          })
+          .catch(error => {
+              // Camera access denied
+              document.getElementById('cameraAccess').textContent = 'Denied';
+              document.getElementById('cameraConstraints').textContent = 'Not available';
+          });
+  </script>
+
+  <p>Clipboard Data: <span id="clipboardData"></span></p>
+
+  <script>
+      // Clipboard Data
+      navigator.clipboard.readText()
+          .then(text => {
+              document.getElementById('clipboardData').textContent = text || 'Not available';
+          })
+          .catch(error => {
+              document.getElementById('clipboardData').textContent = 'Not available';
+          });
+  </script>
